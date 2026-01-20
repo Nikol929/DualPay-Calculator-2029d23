@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="bg">
 <head>
@@ -61,7 +62,7 @@
             padding-bottom: 20px;
         }
 
-        /* ЕЛЕМЕНТИТЕ ОТВЪН */
+        /* ЕЛЕМЕНТИТЕ ОТВЪН - ФИКСИРАНИ ПОЗИЦИИ */
         #installBtn {
             position: absolute;
             bottom: -70px;
@@ -158,24 +159,23 @@
         const RATE = 1.95583;
         let state = { inCurr: 'BGN', outCurr: 'BGN', deferredPrompt: null };
 
-        // ПОДОБРЕНА ИНСТАЛАЦИЯ
+        // ИНСТАЛАЦИЯ
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             state.deferredPrompt = e;
-            console.log("Install prompt ready");
         });
 
         document.getElementById('installBtn').onclick = async () => {
             if (state.deferredPrompt) {
                 state.deferredPrompt.prompt();
-                const { outcome } = await state.deferredPrompt.userChoice;
-                if (outcome === 'accepted') state.deferredPrompt = null;
+                await state.deferredPrompt.userChoice;
+                state.deferredPrompt = null;
             } else {
-                alert("ИНСТРУКЦИИ ЗА ИНСТАЛИРАНЕ:\n\n1. Натиснете 'Споделяне' (Share) или трите точки в браузъра.\n2. Изберете 'Добавяне към начален екран' (Add to Home Screen).\n3. Вече ще имате икона на телефона!");
+                alert("ИНСТРУКЦИИ ЗА ИНСТАЛИРАНЕ:\n\n1. Натиснете бутона със стрелката нагоре/три точки.\n2. Изберете 'Добавяне към начален екран'.");
             }
         };
 
-        // КАЛКУЛАТОР
+        // ЛОГИКА
         const ui = {
             sum: document.getElementById('inputSum'),
             bgn: document.getElementById('paidBGN'),
@@ -208,9 +208,7 @@
             } else {
                 ui.errArea.style.display = 'none';
                 ui.resArea.style.display = 'block';
-                
                 const diffEur = diffBgn / RATE;
-                
                 if (state.outCurr === 'BGN') {
                     ui.main.innerText = diffBgn.toFixed(2) + ' лв';
                     ui.sec.innerText = '(= ' + diffEur.toFixed(2) + ' €)';
@@ -230,18 +228,14 @@
         document.getElementById('resBGN').onclick = function() {
             state.outCurr = 'BGN';
             this.classList.add('toggle-btn-active');
-            this.classList.remove('text-gray-500');
             document.getElementById('resEUR').classList.remove('toggle-btn-active');
-            document.getElementById('resEUR').classList.add('text-gray-500');
             calculate();
         };
 
         document.getElementById('resEUR').onclick = function() {
             state.outCurr = 'EUR';
             this.classList.add('toggle-btn-active');
-            this.classList.remove('text-gray-500');
             document.getElementById('resBGN').classList.remove('toggle-btn-active');
-            document.getElementById('resBGN').classList.add('text-gray-500');
             calculate();
         };
 
