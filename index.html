@@ -45,7 +45,12 @@
             50% { transform: translateY(-20px); }
         }
 
-        /* КАРТАТА В ЦЕНТЪРА */
+        /* ОСНОВЕН КОНТЕЙНЕР */
+        .app-wrapper {
+            position: relative;
+            display: inline-block; /* За да може абсолютното позициониране да е спрямо картата */
+        }
+
         .glass-card {
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
@@ -58,34 +63,32 @@
             z-index: 5;
         }
 
-        /* ИМЕТО - ФИКСИРАНО ВЛЯВО НА ЕКРАНА */
+        /* ИМЕТО - ДОЛЕН ЛЯВ ЪГЪЛ (ИЗВЪН ПОЛЕТО) */
         .footer-name {
-            position: fixed;
-            left: 5%;
-            top: 50%;
-            transform: translateY(-50%);
+            position: absolute;
+            bottom: 15px; /* Свалено надолу към ъгъла */
+            left: -140px; /* Встрани вляво */
             color: white;
             font-family: 'Comfortaa';
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             text-shadow: 0 2px 10px rgba(0,0,0,0.5);
             white-space: nowrap;
             z-index: 10;
         }
 
-        /* БУТОНЪТ - ФИКСИРАН ВДЯСНО НА ЕКРАНА */
+        /* БУТОНЪТ - ДОЛЕН ДЕСЕН ЪГЪЛ (ИЗВЪН ПОЛЕТО) */
         #installBtn {
-            position: fixed;
-            right: 5%;
-            top: 50%;
-            transform: translateY(-50%);
+            position: absolute;
+            bottom: 10px; /* Свалено надолу към ъгъла */
+            right: -140px; /* Встрани вдясно */
             background: #0B3D91;
             color: white;
-            padding: 12px 24px;
-            border-radius: 18px;
+            padding: 10px 20px;
+            border-radius: 15px;
             font-family: 'Comfortaa', cursive;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 13px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
             border: 2px solid rgba(255,255,255,0.3);
             cursor: pointer;
@@ -98,22 +101,10 @@
             color: white !important;
         }
 
-        /* На мобилни устройства ги местим отдолу, за да не се застъпват */
-        @media (max-width: 800px) {
-            .footer-name {
-                position: absolute;
-                top: auto;
-                bottom: -60px;
-                left: 10px;
-                transform: none;
-            }
-            #installBtn {
-                position: absolute;
-                top: auto;
-                bottom: -65px;
-                right: 10px;
-                transform: none;
-            }
+        /* Мобилна версия - елементите минават под картата, ако няма място */
+        @media (max-width: 680px) {
+            .footer-name { left: 10px; bottom: -50px; }
+            #installBtn { right: 10px; bottom: -55px; }
             .glass-card { width: 90vw; }
         }
     </style>
@@ -122,7 +113,7 @@
 
     <div id="bg-grid"></div>
 
-    <div class="relative flex items-center justify-center w-full max-w-5xl">
+    <div class="app-wrapper">
         <div class="footer-name">© Никол Пункова</div>
 
         <div class="glass-card">
@@ -191,7 +182,7 @@
                 await state.deferredPrompt.userChoice;
                 state.deferredPrompt = null;
             } else {
-                alert("ИНСТРУКЦИИ:\n1. Натисни 'Споделяне' или менюто.\n2. Избери 'Add to Home Screen'.");
+                alert("ИНСТРУКЦИИ:\n1. Натисни 'Споделяне'.\n2. Избери 'Add to Home Screen'.");
             }
         };
 
