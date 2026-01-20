@@ -45,14 +45,14 @@
             50% { transform: translateY(-20px); }
         }
 
-        /* КОНТЕЙНЕР ЗА МАКСИМАЛНО РАЗДАЛЕЧАВАНЕ */
-        .main-wrapper {
-            width: 100vw;
-            max-width: 900px; /* Широк обхват за десктоп */
+        /* ГЛАВЕН КОНТЕЙНЕР ЗА ЦЕНТРИРАНЕ */
+        .layout-container {
             display: flex;
             align-items: center;
-            justify-content: space-between; /* Бута всичко в краищата */
-            padding: 0 40px;
+            justify-content: center;
+            width: 100%;
+            max-width: 1200px;
+            padding: 0 20px;
             position: relative;
         }
 
@@ -64,11 +64,26 @@
             border-radius: 3rem;
             padding-bottom: 20px;
             width: 380px;
+            position: relative;
             z-index: 5;
-            margin: 0 auto; /* Центрира картата */
         }
 
+        /* ПОЗИЦИОНИРАНЕ ВЛЯВО ОТ КАРТАТА */
+        .footer-name {
+            position: absolute;
+            left: -150px; /* Изместено вляво от бялото поле */
+            color: white;
+            font-family: 'Comfortaa';
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            white-space: nowrap;
+        }
+
+        /* ПОЗИЦИОНИРАНЕ ВДЯСНО ОТ КАРТАТА */
         #installBtn {
+            position: absolute;
+            right: -150px; /* Изместено вдясно от бялото поле */
             background: #0B3D91;
             color: white;
             padding: 12px 24px;
@@ -80,17 +95,6 @@
             border: 2px solid rgba(255,255,255,0.3);
             cursor: pointer;
             white-space: nowrap;
-            order: 3; /* Винаги последен вдясно */
-        }
-
-        .footer-name {
-            color: white;
-            font-family: 'Comfortaa';
-            font-size: 18px;
-            font-weight: bold;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-            white-space: nowrap;
-            order: 1; /* Винаги първи вляво */
         }
 
         .toggle-btn-active {
@@ -98,12 +102,11 @@
             color: white !important;
         }
 
-        /* За мобилни устройства - елементите остават встрани, но се събират малко */
-        @media (max-width: 650px) {
-            .main-wrapper { padding: 0 10px; }
-            .glass-card { width: 340px; }
-            #installBtn { padding: 8px 15px; font-size: 12px; }
-            .footer-name { font-size: 15px; }
+        /* Адаптивност за мобилни устройства */
+        @media (max-width: 768px) {
+            .footer-name { left: 10px; bottom: -60px; }
+            #installBtn { right: 10px; bottom: -65px; }
+            .glass-card { width: 90vw; }
         }
     </style>
 </head>
@@ -111,7 +114,7 @@
 
     <div id="bg-grid"></div>
 
-    <div class="main-wrapper">
+    <div class="layout-container">
         <div class="footer-name">© Никол Пункова</div>
 
         <div class="glass-card">
@@ -180,7 +183,7 @@
                 await state.deferredPrompt.userChoice;
                 state.deferredPrompt = null;
             } else {
-                alert("ИНСТРУКЦИИ:\n1. Натисни 'Споделяне'.\n2. Избери 'Add to Home Screen'.");
+                alert("ИНСТРУКЦИИ:\n1. Натисни 'Споделяне' или менюто.\n2. Избери 'Добавяне към начален екран'.");
             }
         };
 
