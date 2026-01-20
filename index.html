@@ -71,6 +71,26 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
+        /* МОДАЛЕН ПРОЗОРЕЦ ЗА ИНСТРУКЦИИ */
+        #installModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            max-width: 300px;
+            text-align: center;
+        }
+
         .toggle-btn-active {
             background: #0B3D91 !important;
             color: white !important;
@@ -96,7 +116,7 @@
                     <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1 ml-1">Сума за плащане</label>
                     <div class="flex rounded-xl overflow-hidden border border-gray-200">
                         <input type="number" id="inputSum" placeholder="0.00" class="w-2/3 p-3 bg-gray-50 text-xl font-bold outline-none">
-                        <button id="toggleInput" class="w-1/3 bg-deep-sea text-white font-bold transition-colors">BGN</button>
+                        <button id="toggleInput" class="w-1/3 bg-deep-sea text-white font-bold">BGN</button>
                     </div>
                 </div>
 
@@ -135,6 +155,14 @@
         <button id="installBtn">Инсталирай</button>
     </div>
 
+    <div id="installModal" onclick="this.style.display='none'">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h3 class="font-bold text-lg mb-4 text-deep-sea">Инсталиране</h3>
+            <p id="installInstructions" class="text-sm text-gray-600 mb-6"></p>
+            <button onclick="document.getElementById('installModal').style.display='none'" class="bg-deep-sea text-white px-6 py-2 rounded-xl font-bold w-full">Разбрах</button>
+        </div>
+    </div>
+
     <script>
         const RATE = 1.95583;
         let state = { inCurr: 'BGN', outCurr: 'BGN', deferredPrompt: null };
@@ -155,25 +183,17 @@
             const pBgn = parseFloat(ui.bgn.value) || 0;
             const pEur = parseFloat(ui.eur.value) || 0;
 
-            if (total <= 0) {
-                ui.resArea.classList.add('hidden');
-                ui.errArea.classList.add('hidden');
-                return;
-            }
+            if (total <= 0) { ui.resArea.classList.add('hidden'); ui.errArea.classList.add('hidden'); return; }
 
-            // Изчисляваме общата сума в Лева за сравнение
             const targetBgn = state.inCurr === 'BGN' ? total : total * RATE;
             const givenBgn = pBgn + (pEur * RATE);
             const diffBgn = givenBgn - targetBgn;
 
             if (diffBgn < -0.01) {
-                ui.errArea.classList.remove('hidden');
-                ui.resArea.classList.add('hidden');
+                ui.errArea.classList.remove('hidden'); ui.resArea.classList.add('hidden');
             } else {
-                ui.errArea.classList.add('hidden');
-                ui.resArea.classList.remove('hidden');
+                ui.errArea.classList.add('hidden'); ui.resArea.classList.remove('hidden');
                 const diffEur = diffBgn / RATE;
-                
                 if (state.outCurr === 'BGN') {
                     ui.main.innerText = diffBgn.toFixed(2) + ' лв';
                     ui.sec.innerText = '(= ' + diffEur.toFixed(2) + ' €)';
@@ -184,7 +204,6 @@
             }
         }
 
-        // Превключване на валутата на входната сума
         ui.toggleIn.onclick = () => {
             state.inCurr = state.inCurr === 'BGN' ? 'EUR' : 'BGN';
             ui.toggleIn.innerText = state.inCurr;
@@ -207,17 +226,28 @@
 
         [ui.sum, ui.bgn, ui.eur].forEach(el => el.oninput = calculate);
 
+        // ЛОГИКА ЗА ИНСТАЛИРАНЕ
+        const installBtn = document.getElementById('installBtn');
+        const modal = document.getElementById('installModal');
+        const instr = document.getElementById('installInstructions');
+
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             state.deferredPrompt = e;
         });
 
-        document.getElementById('installBtn').onclick = async () => {
+        installBtn.onclick = async () => {
             if (state.deferredPrompt) {
                 state.deferredPrompt.prompt();
                 state.deferredPrompt = null;
             } else {
-                alert("Използвайте менюто на браузъра 'Add to Home Screen'.");
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                if (isIOS) {
+                    instr.innerHTML = "1. Натисни бутона <b>'Споделяне'</b> (квадратче със стрелка долу).<br><br>2. Избери <b>'Добавяне към началния екран'</b> (Add to Home Screen).";
+                } else {
+                    instr.innerHTML = "1. Натисни <b>трите точки</b> в ъгъла на браузъра.<br><br>2. Избери <b>'Инсталиране на приложение'</b> или 'Добавяне към начален екран'.";
+                }
+                modal.style.display = 'flex';
             }
         };
     </script>
