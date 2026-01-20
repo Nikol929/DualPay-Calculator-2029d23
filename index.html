@@ -34,7 +34,7 @@
         #bg-grid {
             position: absolute; inset: 0; z-index: -1;
             display: grid; grid-template-columns: repeat(6, 1fr);
-            opacity: 0.2; pointer-events: none;
+            opacity: 0.15; pointer-events: none;
         }
         .symbol {
             font-family: 'Comfortaa', cursive; font-size: 2.2rem; color: white;
@@ -46,136 +46,124 @@
             50% { transform: translateY(-15px); }
         }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+        .app-container {
+            position: relative;
+            width: 92%;
+            max-width: 380px;
         }
 
-        /* Бутонът точно до името ти долу вдясно */
-        .install-special {
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+            border-radius: 3rem;
+            overflow: hidden;
+            padding-bottom: 20px;
+        }
+
+        /* БУТОНЪТ ИЗВЪН КАРТАТА */
+        #installBtn {
+            position: absolute;
+            bottom: -55px; /* Слиза под картата */
+            right: 5px;    /* Вдясно до името */
             background: #0B3D91;
             color: white;
-            padding: 6px 14px;
-            border-radius: 12px;
+            padding: 10px 20px;
+            border-radius: 15px;
             font-family: 'Comfortaa', cursive;
             font-weight: bold;
-            font-size: 11px;
-            box-shadow: 0 4px 12px rgba(11, 61, 145, 0.3);
-            transition: all 0.2s ease;
+            font-size: 13px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255,255,255,0.2);
             cursor: pointer;
-            margin-left: 10px;
+            z-index: 100;
+            transition: all 0.2s ease;
         }
-        .install-special:active { transform: scale(0.9); background: #082d6b; }
+        #installBtn:active { transform: scale(0.95); }
+
+        .footer-name {
+            position: absolute;
+            bottom: -45px;
+            left: 20px;
+            color: white;
+            font-family: 'Comfortaa';
+            font-size: 12px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
     <div id="bg-grid"></div>
 
-    <div class="glass-card w-[92%] max-w-[380px] rounded-[3rem] flex flex-col relative overflow-hidden">
-        
-        <header class="pt-10 pb-4 text-center">
-            <div class="inline-block bg-deep-sea text-white p-4 rounded-3xl shadow-lg mb-3">
-                <span class="font-comfortaa text-2xl font-bold">€ ⇄ лв</span>
-            </div>
-            <h1 class="font-comfortaa text-deep-sea text-xl font-bold tracking-tight">DualPay Calculator</h1>
-        </header>
-
-        <main class="px-8 pb-6 space-y-5">
-            <div class="space-y-1">
-                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Сума за плащане</label>
-                <div class="flex rounded-2xl overflow-hidden border-2 border-deep-sea/10">
-                    <input type="number" id="inputSum" inputmode="decimal" placeholder="0.00" 
-                        class="w-2/3 p-4 bg-blue-50/50 text-2xl font-bold text-deep-sea outline-none">
-                    <button id="toggleCurrency" class="w-1/3 bg-deep-sea text-white font-comfortaa font-bold text-sm">BGN</button>
+    <div class="app-container">
+        <div class="glass-card">
+            <header class="pt-10 pb-4 text-center">
+                <div class="inline-block bg-deep-sea text-white p-4 rounded-3xl shadow-lg mb-3">
+                    <span class="font-comfortaa text-2xl font-bold">€ ⇄ лв</span>
                 </div>
-            </div>
+                <h1 class="font-comfortaa text-deep-sea text-xl font-bold tracking-tight">DualPay Calculator</h1>
+            </header>
 
-            <div class="grid grid-cols-2 gap-4">
+            <main class="px-8 pb-4 space-y-5">
                 <div class="space-y-1">
-                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Платено в лв</label>
-                    <input type="number" id="paidBGN" inputmode="decimal" placeholder="0.00" 
-                        class="w-full p-4 bg-white rounded-2xl font-bold text-gray-700 border border-gray-100 outline-none focus:ring-2 focus:ring-deep-sea shadow-sm">
-                </div>
-                <div class="space-y-1">
-                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Платено в €</label>
-                    <input type="number" id="paidEUR" inputmode="decimal" placeholder="0.00" 
-                        class="w-full p-4 bg-white rounded-2xl font-bold text-gray-700 border border-gray-100 outline-none focus:ring-2 focus:ring-deep-sea shadow-sm">
-                </div>
-            </div>
-
-            <div id="resultBox" class="hidden transition-all duration-500">
-                <div class="flex justify-between items-center mb-2">
-                    <span class="font-comfortaa font-bold text-deep-sea text-sm tracking-tight">Ресто за връщане</span>
-                    <div class="bg-gray-200 p-1 rounded-xl flex text-[10px] font-bold">
-                        <button id="resBGN" class="px-4 py-1.5 rounded-lg bg-white shadow text-deep-sea">BGN</button>
-                        <button id="resEUR" class="px-4 py-1.5 rounded-lg text-gray-500 ml-1">EUR</button>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Сума за плащане</label>
+                    <div class="flex rounded-2xl overflow-hidden border-2 border-deep-sea/10">
+                        <input type="number" id="inputSum" inputmode="decimal" placeholder="0.00" class="w-2/3 p-4 bg-blue-50/50 text-2xl font-bold text-deep-sea outline-none">
+                        <button id="toggleCurrency" class="w-1/3 bg-deep-sea text-white font-comfortaa font-bold">BGN</button>
                     </div>
                 </div>
-                <div class="bg-white/60 p-5 rounded-[2.5rem] text-center border border-white shadow-inner">
-                    <div id="mainRes" class="text-4xl font-bold text-deep-sea tracking-tighter">0.00 лв</div>
-                    <div id="secRes" class="text-[11px] text-gray-400 font-medium mt-1">(= 0.00 €)</div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Платено в лв</label>
+                        <input type="number" id="paidBGN" inputmode="decimal" placeholder="0.00" class="w-full p-4 bg-white rounded-2xl font-bold text-gray-700 border border-gray-100 outline-none shadow-sm">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Платено в €</label>
+                        <input type="number" id="paidEUR" inputmode="decimal" placeholder="0.00" class="w-full p-4 bg-white rounded-2xl font-bold text-gray-700 border border-gray-100 outline-none shadow-sm">
+                    </div>
                 </div>
-            </div>
 
-            <div id="errorBox" class="hidden bg-red-50 border-l-4 border-red-500 p-3 rounded-xl text-red-700 text-[10px] font-bold">
-                Недостатъчна сума! Остават: <span id="errorAmt"></span>
-            </div>
-        </main>
+                <div id="resultBox" class="hidden">
+                    <div class="flex justify-between items-center mb-2 text-deep-sea font-bold text-sm">Ресто за връщане</div>
+                    <div class="bg-white/60 p-5 rounded-[2.5rem] text-center border border-white">
+                        <div id="mainRes" class="text-4xl font-bold text-deep-sea">0.00 лв</div>
+                        <div id="secRes" class="text-[11px] text-gray-400 font-medium">(= 0.00 €)</div>
+                    </div>
+                </div>
 
-        <footer class="mt-auto p-6 bg-white/30 border-t border-white/20 flex justify-between items-end">
-            <div class="flex flex-col">
-                <p class="text-[10px] font-bold text-deep-sea opacity-60 mb-1">Курс: 1.95583</p>
-                <p class="text-[11px] font-comfortaa font-bold text-deep-sea flex items-center">
-                    © Никол Пункова 
-                    <button id="installBtn" class="install-special">Инсталирай</button>
-                </p>
-            </div>
-        </footer>
+                <div id="errorBox" class="hidden text-red-600 text-center font-bold text-xs p-2">Недостатъчна сума!</div>
+            </main>
+        </div>
+
+        <div class="footer-name">© Никол Пункова</div>
+        <button id="installBtn">Инсталирай</button>
     </div>
 
     <script>
         const RATE = 1.95583;
         let config = { inCurr: 'BGN', outCurr: 'BGN', deferredPrompt: null };
 
-        // --- PWA LOGIC ---
-        function initPWA() {
-            const manifest = {
-                name: "DualPay Calculator",
-                short_name: "DualPay",
-                start_url: ".",
-                display: "standalone",
-                background_color: "#9D50BB",
-                theme_color: "#0B3D91",
-                icons: [{ src: "https://cdn-icons-png.flaticon.com/512/2454/2454282.png", sizes: "512x512", type: "image/png" }]
-            };
-            const blob = new Blob([JSON.stringify(manifest)], {type: 'application/manifest+json'});
-            const link = document.createElement('link'); link.rel = 'manifest'; link.href = URL.createObjectURL(blob);
-            document.head.appendChild(link);
+        // --- PWA ---
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            config.deferredPrompt = e;
+        });
 
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register(URL.createObjectURL(new Blob(["self.addEventListener('fetch', (e) => {});"], {type: 'application/javascript'})));
+        document.getElementById('installBtn').onclick = async () => {
+            if (config.deferredPrompt) {
+                config.deferredPrompt.prompt();
+                await config.deferredPrompt.userChoice;
+                config.deferredPrompt = null;
+            } else {
+                alert("За инсталация:\n1. Натисни бутона за споделяне (Safari) или трите точки (Chrome).\n2. Избери 'Добавяне към начален екран'.");
             }
+        };
 
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                config.deferredPrompt = e;
-            });
-
-            document.getElementById('installBtn').onclick = async () => {
-                if (config.deferredPrompt) {
-                    config.deferredPrompt.prompt();
-                    await config.deferredPrompt.userChoice;
-                    config.deferredPrompt = null;
-                } else {
-                    alert("ИНСТРУКЦИИ:\n\n1. Натисни бутона 'Споделяне' (на iPhone) или трите точки (на Android).\n2. Избери 'Add to Home Screen' (Добавяне към начален екран).");
-                }
-            };
-        }
-
-        // --- CALC LOGIC ---
+        // --- CALC ---
         const ui = {
             input: document.getElementById('inputSum'),
             pBgn: document.getElementById('paidBGN'),
@@ -191,48 +179,28 @@
             const bgn = parseFloat(ui.pBgn.value) || 0;
             const eur = parseFloat(ui.pEur.value) || 0;
 
-            if (sum <= 0) { ui.res.style.display = 'none'; ui.err.style.display = 'none'; return; }
+            if (sum <= 0) { ui.res.style.display = 'none'; return; }
 
             const targetBgn = config.inCurr === 'BGN' ? sum : sum * RATE;
             const paidBgn = bgn + (eur * RATE);
             const diff = paidBgn - targetBgn;
 
-            if (diff < -0.01) {
+            if (diff < 0) {
                 ui.err.style.display = 'block'; ui.res.style.display = 'none';
-                document.getElementById('errorAmt').innerText = config.inCurr === 'BGN' ? Math.abs(diff).toFixed(2) + ' лв' : (Math.abs(diff)/RATE).toFixed(2) + ' €';
             } else {
                 ui.err.style.display = 'none'; ui.res.style.display = 'block';
-                const rBgn = diff, rEur = diff / RATE;
-                if(config.outCurr === 'BGN') {
-                    ui.mainTxt.innerText = rBgn.toFixed(2) + ' лв';
-                    ui.secTxt.innerText = '(= ' + rEur.toFixed(2) + ' €)';
-                } else {
-                    ui.mainTxt.innerText = rEur.toFixed(2) + ' €';
-                    ui.secTxt.innerText = '(= ' + rBgn.toFixed(2) + ' лв)';
-                }
+                ui.mainTxt.innerText = diff.toFixed(2) + ' лв';
+                ui.secTxt.innerText = '(= ' + (diff/RATE).toFixed(2) + ' €)';
             }
         }
 
-        document.getElementById('toggleCurrency').onclick = function() {
-            config.inCurr = config.inCurr === 'BGN' ? 'EUR' : 'BGN';
-            this.innerText = config.inCurr; calculate();
-        };
-
-        document.getElementById('resBGN').onclick = () => { config.outCurr = 'BGN'; updateTabs(); calculate(); };
-        document.getElementById('resEUR').onclick = () => { config.outCurr = 'EUR'; updateTabs(); calculate(); };
-
-        function updateTabs() {
-            const b = document.getElementById('resBGN'), e = document.getElementById('resEUR');
-            b.className = config.outCurr === 'BGN' ? "px-4 py-1.5 rounded-lg bg-white shadow text-deep-sea" : "px-4 py-1.5 rounded-lg text-gray-500 ml-1";
-            e.className = config.outCurr === 'EUR' ? "px-4 py-1.5 rounded-lg bg-white shadow text-deep-sea" : "px-4 py-1.5 rounded-lg text-gray-500 ml-1";
-        }
-
-        [ui.input, ui.pBgn, ui.pEur].forEach(el => el.oninput = calculate);
+        ui.input.oninput = calculate;
+        ui.pBgn.oninput = calculate;
+        ui.pEur.oninput = calculate;
 
         window.onload = () => {
-            initPWA();
             const grid = document.getElementById('bg-grid');
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 15; i++) {
                 const s = document.createElement('div');
                 s.className = 'symbol'; s.innerText = i % 2 === 0 ? '€' : 'лв';
                 s.style.animationDelay = (Math.random() * 5) + 's';
