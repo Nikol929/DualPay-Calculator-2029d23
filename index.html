@@ -26,11 +26,29 @@
             height: 100vh; margin: 0; overflow: hidden;
             display: flex; align-items: center; justify-content: center;
             font-family: 'Montserrat', sans-serif;
+            position: relative;
+        }
+
+        /* ПЛУВАЩИТЕ ИКОНКИ ОТ НАЧАЛОТО */
+        #bg-grid {
+            position: absolute; inset: 0; z-index: 0;
+            display: grid; grid-template-columns: repeat(6, 1fr);
+            opacity: 0.25; pointer-events: none;
+        }
+        .symbol {
+            font-family: 'Comfortaa', cursive; font-size: 2.5rem; color: white;
+            display: flex; align-items: center; justify-content: center;
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
         }
 
         .app-container {
             position: relative;
             padding-bottom: 60px;
+            z-index: 10;
         }
 
         .glass-card {
@@ -41,7 +59,6 @@
             padding: 2rem 0;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
             position: relative;
-            z-index: 5;
         }
 
         .footer-name {
@@ -71,36 +88,20 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
-        /* МОДАЛЕН ПРОЗОРЕЦ ЗА ИНСТРУКЦИИ */
         #installModal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.8);
-            z-index: 100;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.8); z-index: 100;
+            align-items: center; justify-content: center; padding: 20px;
         }
+        .modal-content { background: white; padding: 25px; border-radius: 20px; max-width: 300px; text-align: center; }
 
-        .modal-content {
-            background: white;
-            padding: 25px;
-            border-radius: 20px;
-            max-width: 300px;
-            text-align: center;
-        }
-
-        .toggle-btn-active {
-            background: #0B3D91 !important;
-            color: white !important;
-        }
-
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .toggle-btn-active { background: #0B3D91 !important; color: white !important; }
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     </style>
 </head>
 <body>
+
+    <div id="bg-grid"></div>
 
     <div class="app-container">
         <div class="glass-card">
@@ -182,71 +183,44 @@
             const total = parseFloat(ui.sum.value) || 0;
             const pBgn = parseFloat(ui.bgn.value) || 0;
             const pEur = parseFloat(ui.eur.value) || 0;
-
             if (total <= 0) { ui.resArea.classList.add('hidden'); ui.errArea.classList.add('hidden'); return; }
-
             const targetBgn = state.inCurr === 'BGN' ? total : total * RATE;
             const givenBgn = pBgn + (pEur * RATE);
             const diffBgn = givenBgn - targetBgn;
-
-            if (diffBgn < -0.01) {
-                ui.errArea.classList.remove('hidden'); ui.resArea.classList.add('hidden');
-            } else {
+            if (diffBgn < -0.01) { ui.errArea.classList.remove('hidden'); ui.resArea.classList.add('hidden'); } 
+            else {
                 ui.errArea.classList.add('hidden'); ui.resArea.classList.remove('hidden');
                 const diffEur = diffBgn / RATE;
-                if (state.outCurr === 'BGN') {
-                    ui.main.innerText = diffBgn.toFixed(2) + ' лв';
-                    ui.sec.innerText = '(= ' + diffEur.toFixed(2) + ' €)';
-                } else {
-                    ui.main.innerText = diffEur.toFixed(2) + ' €';
-                    ui.sec.innerText = '(= ' + diffBgn.toFixed(2) + ' лв)';
-                }
+                if (state.outCurr === 'BGN') { ui.main.innerText = diffBgn.toFixed(2) + ' лв'; ui.sec.innerText = '(= ' + diffEur.toFixed(2) + ' €)'; } 
+                else { ui.main.innerText = diffEur.toFixed(2) + ' €'; ui.sec.innerText = '(= ' + diffBgn.toFixed(2) + ' лв)'; }
             }
         }
 
-        ui.toggleIn.onclick = () => {
-            state.inCurr = state.inCurr === 'BGN' ? 'EUR' : 'BGN';
-            ui.toggleIn.innerText = state.inCurr;
-            calculate();
-        };
-
-        document.getElementById('resBGN').onclick = function() {
-            state.outCurr = 'BGN';
-            this.classList.add('toggle-btn-active');
-            document.getElementById('resEUR').classList.remove('toggle-btn-active');
-            calculate();
-        };
-
-        document.getElementById('resEUR').onclick = function() {
-            state.outCurr = 'EUR';
-            this.classList.add('toggle-btn-active');
-            document.getElementById('resBGN').classList.remove('toggle-btn-active');
-            calculate();
-        };
-
+        ui.toggleIn.onclick = () => { state.inCurr = state.inCurr === 'BGN' ? 'EUR' : 'BGN'; ui.toggleIn.innerText = state.inCurr; calculate(); };
+        document.getElementById('resBGN').onclick = function() { state.outCurr = 'BGN'; this.classList.add('toggle-btn-active'); document.getElementById('resEUR').classList.remove('toggle-btn-active'); calculate(); };
+        document.getElementById('resEUR').onclick = function() { state.outCurr = 'EUR'; this.classList.add('toggle-btn-active'); document.getElementById('resBGN').classList.remove('toggle-btn-active'); calculate(); };
         [ui.sum, ui.bgn, ui.eur].forEach(el => el.oninput = calculate);
 
-        // ЛОГИКА ЗА ИНСТАЛИРАНЕ
+        // ГЕНЕРИРАНЕ НА ИКОНКИТЕ НА ФОНА
+        window.onload = () => {
+            const grid = document.getElementById('bg-grid');
+            for (let i = 0; i < 12; i++) {
+                const s = document.createElement('div');
+                s.className = 'symbol'; s.innerText = i % 2 === 0 ? '€' : 'лв';
+                s.style.animationDelay = (Math.random() * 5) + 's';
+                grid.appendChild(s);
+            }
+        };
+
         const installBtn = document.getElementById('installBtn');
         const modal = document.getElementById('installModal');
         const instr = document.getElementById('installInstructions');
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            state.deferredPrompt = e;
-        });
-
+        window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); state.deferredPrompt = e; });
         installBtn.onclick = async () => {
-            if (state.deferredPrompt) {
-                state.deferredPrompt.prompt();
-                state.deferredPrompt = null;
-            } else {
+            if (state.deferredPrompt) { state.deferredPrompt.prompt(); state.deferredPrompt = null; } 
+            else {
                 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-                if (isIOS) {
-                    instr.innerHTML = "1. Натисни бутона <b>'Споделяне'</b> (квадратче със стрелка долу).<br><br>2. Избери <b>'Добавяне към началния екран'</b> (Add to Home Screen).";
-                } else {
-                    instr.innerHTML = "1. Натисни <b>трите точки</b> в ъгъла на браузъра.<br><br>2. Избери <b>'Инсталиране на приложение'</b> или 'Добавяне към начален екран'.";
-                }
+                instr.innerHTML = isIOS ? "1. Натисни <b>'Споделяне'</b>.<br>2. Избери <b>'Добавяне към началния екран'</b>." : "1. Натисни <b>трите точки</b>.<br>2. Избери <b>'Инсталиране'</b>.";
                 modal.style.display = 'flex';
             }
         };
