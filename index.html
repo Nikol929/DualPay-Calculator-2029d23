@@ -62,11 +62,11 @@
             z-index: 5;
         }
 
-        /* ПОЗИЦИОНИРАНЕ ГОРЕ ДО ПОЛЕТО - ИЗВЪН НЕГО */
+        /* ПОЗИЦИОНИРАНЕ ОЩЕ ПО-ВСТРАНИ (НЯКОЛКО САНТИМЕТРА) */
         #installBtn {
             position: absolute;
-            bottom: 60px; /* Вдигнат значително по-нагоре */
-            right: -15px; /* Встрани вдясно */
+            bottom: 60px; 
+            right: -35px; /* ИЗМЕСТЕН ПОВЕЧЕ НАДЯСНО */
             background: #0B3D91;
             color: white;
             padding: 10px 22px;
@@ -78,25 +78,31 @@
             border: 2px solid rgba(255,255,255,0.3);
             cursor: pointer;
             z-index: 10;
-            transition: transform 0.2s;
+            white-space: nowrap;
         }
-        #installBtn:active { transform: scale(0.9); }
 
         .footer-name {
             position: absolute;
-            bottom: 70px; /* Вдигнато на нивото на бутона */
-            left: -10px;  /* Встрани вляво */
+            bottom: 70px; 
+            left: -30px;  /* ИЗМЕСТЕН ПОВЕЧЕ НАЛЯВО */
             color: white;
             font-family: 'Comfortaa';
             font-size: 17px;
             font-weight: bold;
             text-shadow: 0 2px 10px rgba(0,0,0,0.4);
             z-index: 10;
+            white-space: nowrap;
         }
 
         .toggle-btn-active {
             background: #0B3D91 !important;
             color: white !important;
+        }
+
+        /* Защита за малки екрани, за да не излязат извън дисплея */
+        @media (max-width: 480px) {
+            #installBtn { right: -15px; }
+            .footer-name { left: -10px; }
         }
     </style>
 </head>
@@ -172,7 +178,7 @@
                 await state.deferredPrompt.userChoice;
                 state.deferredPrompt = null;
             } else {
-                alert("ИНСТРУКЦИИ:\n\n1. Натисни 'Споделяне' или менюто.\n2. Избери 'Add to Home Screen'.");
+                alert("ИНСТРУКЦИИ:\n\n1. Натиснете 'Споделяне' или менюто.\n2. Изберете 'Добавяне към начален екран'.");
             }
         };
 
