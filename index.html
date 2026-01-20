@@ -45,10 +45,9 @@
             50% { transform: translateY(-20px); }
         }
 
-        /* ОСНОВЕН КОНТЕЙНЕР */
         .app-wrapper {
             position: relative;
-            display: inline-block; /* За да може абсолютното позициониране да е спрямо картата */
+            display: inline-block;
         }
 
         .glass-card {
@@ -63,32 +62,32 @@
             z-index: 5;
         }
 
-        /* ИМЕТО - ДОЛЕН ЛЯВ ЪГЪЛ (ИЗВЪН ПОЛЕТО) */
+        /* ИМЕТО - ТОЧНО В ДОЛНИЯ ЛЯВ ЪГЪЛ НА КАРТАТА */
         .footer-name {
             position: absolute;
-            bottom: 15px; /* Свалено надолу към ъгъла */
-            left: -140px; /* Встрани вляво */
+            bottom: -5px; /* Плътно до долния край */
+            left: -110px;  /* По-близо до ъгъла */
             color: white;
             font-family: 'Comfortaa';
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
             text-shadow: 0 2px 10px rgba(0,0,0,0.5);
             white-space: nowrap;
             z-index: 10;
         }
 
-        /* БУТОНЪТ - ДОЛЕН ДЕСЕН ЪГЪЛ (ИЗВЪН ПОЛЕТО) */
+        /* БУТОНЪТ - ТОЧНО В ДОЛНИЯ ДЕСЕН ЪГЪЛ НА КАРТАТА */
         #installBtn {
             position: absolute;
-            bottom: 10px; /* Свалено надолу към ъгъла */
-            right: -140px; /* Встрани вдясно */
+            bottom: -10px; /* Плътно до долния край */
+            right: -110px;  /* По-близо до ъгъла */
             background: #0B3D91;
             color: white;
-            padding: 10px 20px;
-            border-radius: 15px;
+            padding: 8px 18px;
+            border-radius: 12px;
             font-family: 'Comfortaa', cursive;
             font-weight: bold;
-            font-size: 13px;
+            font-size: 12px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
             border: 2px solid rgba(255,255,255,0.3);
             cursor: pointer;
@@ -101,10 +100,9 @@
             color: white !important;
         }
 
-        /* Мобилна версия - елементите минават под картата, ако няма място */
-        @media (max-width: 680px) {
-            .footer-name { left: 10px; bottom: -50px; }
-            #installBtn { right: 10px; bottom: -55px; }
+        @media (max-width: 650px) {
+            .footer-name { left: 5px; bottom: -50px; }
+            #installBtn { right: 5px; bottom: -55px; }
             .glass-card { width: 90vw; }
         }
     </style>
