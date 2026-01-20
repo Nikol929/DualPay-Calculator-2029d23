@@ -14,9 +14,7 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: {
-                        'deep-sea': '#0B3D91',
-                    }
+                    colors: { 'deep-sea': '#0B3D91' }
                 }
             }
         }
@@ -30,63 +28,49 @@
             font-family: 'Montserrat', sans-serif;
         }
 
-        #bg-grid {
-            position: absolute; inset: 0; z-index: -1;
-            display: grid; grid-template-columns: repeat(6, 1fr);
-            opacity: 0.2; pointer-events: none;
-        }
-
-        .app-wrapper {
+        .app-container {
             position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100vw;
-            height: 100vh;
+            padding-bottom: 60px; /* Място за името и бутона под картата */
         }
 
         .glass-card {
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(15px);
-            border-radius: 3rem;
-            padding-bottom: 20px;
-            width: 380px;
+            backdrop-filter: blur(10px);
+            border-radius: 2.5rem;
+            width: 360px;
+            padding: 2rem 0;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
             z-index: 5;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.4);
         }
 
-        /* ИМЕТО - КРАЙНО ЛЯВО */
+        /* ИМЕТО В ЛЯВО */
         .footer-name {
             position: absolute;
-            bottom: 50px; 
-            left: 40px; 
+            bottom: 10px;
+            left: 0;
             color: white;
             font-family: 'Comfortaa';
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-            white-space: nowrap;
-            z-index: 10;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
-        /* БУТОНЪТ - КРАЙНО ДЯСНО */
+        /* БУТОНЪТ В ДЯСНО */
         #installBtn {
             position: absolute;
-            bottom: 45px;
-            right: 40px; 
-            background: #0B3D91;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 15px;
-            font-family: 'Comfortaa', cursive;
+            bottom: 5px;
+            right: 0;
+            background: white;
+            color: #0B3D91;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-family: 'Comfortaa';
             font-weight: bold;
-            font-size: 14px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-            border: 2px solid rgba(255,255,255,0.3);
+            font-size: 12px;
+            border: none;
             cursor: pointer;
-            z-index: 10;
-            white-space: nowrap;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
         .toggle-btn-active {
@@ -94,68 +78,62 @@
             color: white !important;
         }
 
-        @media (max-width: 850px) {
-            .footer-name { left: 15px; bottom: 20px; font-size: 14px; }
-            #installBtn { right: 15px; bottom: 15px; padding: 10px 18px; font-size: 12px; }
-            .glass-card { width: 90vw; }
-        }
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     </style>
 </head>
 <body>
 
-    <div id="bg-grid"></div>
-
-    <div class="app-wrapper">
-        <div class="footer-name">© Никол Пункова</div>
-
+    <div class="app-container">
         <div class="glass-card">
-            <header class="pt-10 pb-4 text-center">
-                <div class="inline-block bg-deep-sea text-white p-4 rounded-3xl shadow-lg mb-3">
-                    <span class="font-comfortaa text-2xl font-bold">€ ⇄ лв</span>
+            <header class="text-center mb-6">
+                <div class="inline-block bg-deep-sea text-white p-3 rounded-2xl mb-2">
+                    <span class="font-comfortaa text-xl">€ ⇄ лв</span>
                 </div>
-                <h1 class="font-comfortaa text-deep-sea text-xl font-bold tracking-tight">DualPay Calculator</h1>
+                <h1 class="font-comfortaa text-deep-sea text-lg font-bold">DualPay Calculator</h1>
             </header>
 
-            <main class="px-8 pb-4 space-y-6">
-                <div class="space-y-2">
-                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">Сума за плащане</label>
-                    <div class="flex rounded-2xl overflow-hidden border-2 border-deep-sea/10">
-                        <input type="number" id="inputSum" inputmode="decimal" placeholder="0.00" class="w-2/3 p-4 bg-blue-50/50 text-2xl font-bold text-deep-sea outline-none">
-                        <button id="toggleInput" class="w-1/3 bg-deep-sea text-white font-comfortaa font-bold text-lg">BGN</button>
+            <main class="px-6 space-y-5">
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1 ml-1">Сума за плащане</label>
+                    <div class="flex rounded-xl overflow-hidden border border-gray-200">
+                        <input type="number" id="inputSum" placeholder="0.00" class="w-2/3 p-3 bg-gray-50 text-xl font-bold outline-none">
+                        <button id="toggleInput" class="w-1/3 bg-deep-sea text-white font-bold">BGN</button>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="space-y-2">
-                        <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">Платено в лв</label>
-                        <input type="number" id="paidBGN" inputmode="decimal" placeholder="0.00" class="w-full p-4 bg-white rounded-2xl font-bold text-gray-700 border border-gray-100 outline-none shadow-sm">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1 ml-1">Платено в лв</label>
+                        <input type="number" id="paidBGN" placeholder="0.00" class="w-full p-3 bg-white border border-gray-100 rounded-xl font-bold outline-none">
                     </div>
-                    <div class="space-y-2">
-                        <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">Платено в €</label>
-                        <input type="number" id="paidEUR" inputmode="decimal" placeholder="0.00" class="w-full p-4 bg-white rounded-2xl font-bold text-gray-700 border border-gray-100 outline-none shadow-sm">
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1 ml-1">Платено в €</label>
+                        <input type="number" id="paidEUR" placeholder="0.00" class="w-full p-3 bg-white border border-gray-100 rounded-xl font-bold outline-none">
                     </div>
                 </div>
 
-                <div id="resultArea" class="hidden space-y-4 pt-2">
-                    <div class="flex justify-between items-center">
-                        <span class="font-comfortaa font-bold text-deep-sea">Ресто в:</span>
-                        <div class="bg-gray-200 p-1 rounded-xl flex text-[10px] font-bold">
-                            <button id="resBGN" class="px-5 py-2 rounded-lg toggle-btn-active">BGN</button>
-                            <button id="resEUR" class="px-5 py-2 rounded-lg text-gray-500 ml-1">EUR</button>
+                <div id="resultArea" class="hidden pt-2">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm font-bold text-deep-sea">Ресто в:</span>
+                        <div class="bg-gray-100 p-1 rounded-lg flex text-[10px] font-bold">
+                            <button id="resBGN" class="px-4 py-1 rounded-md toggle-btn-active">BGN</button>
+                            <button id="resEUR" class="px-4 py-1 rounded-md text-gray-500 ml-1">EUR</button>
                         </div>
                     </div>
-                    <div class="bg-white/70 p-6 rounded-[2.5rem] text-center border border-white shadow-inner">
-                        <div id="displayMain" class="text-4xl font-bold text-deep-sea">0.00 лв</div>
-                        <div id="displaySec" class="text-sm text-gray-400 font-medium mt-1">(= 0.00 €)</div>
+                    <div class="bg-blue-50/50 p-4 rounded-2xl text-center border border-blue-100">
+                        <div id="displayMain" class="text-3xl font-bold text-deep-sea">0.00 лв</div>
+                        <div id="displaySec" class="text-xs text-gray-400 mt-1">(= 0.00 €)</div>
                     </div>
                 </div>
 
-                <div id="errorArea" class="hidden bg-red-50 text-red-600 p-4 rounded-2xl text-center font-bold text-xs border-l-4 border-red-500">
+                <div id="errorArea" class="hidden bg-red-50 text-red-500 p-3 rounded-xl text-center font-bold text-xs">
                     Сумата не достига!
                 </div>
             </main>
         </div>
 
+        <div class="footer-name">© Никол Пункова</div>
         <button id="installBtn">Инсталирай</button>
     </div>
 
@@ -236,10 +214,9 @@
         document.getElementById('installBtn').onclick = async () => {
             if (state.deferredPrompt) {
                 state.deferredPrompt.prompt();
-                await state.deferredPrompt.userChoice;
                 state.deferredPrompt = null;
             } else {
-                alert("ИНСТРУКЦИИ:\n1. Натисни 'Споделяне'.\n2. Избери 'Add to Home Screen'.");
+                alert("Използвайте менюто на браузъра за инсталиране.");
             }
         };
     </script>
