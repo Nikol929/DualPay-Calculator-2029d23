@@ -47,8 +47,11 @@
 
         .app-container {
             position: relative;
-            width: 92%;
-            max-width: 400px;
+            width: 100vw; /* Използваме цялата ширина на екрана */
+            max-width: 600px; /* По-широк контейнер за елементите отстрани */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .glass-card {
@@ -58,23 +61,24 @@
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
             border-radius: 3rem;
             padding-bottom: 20px;
+            width: 380px; /* Фиксирана ширина на картата */
             position: relative;
             z-index: 5;
         }
 
-        /* ПОЗИЦИОНИРАНЕ ОЩЕ ПО-ВСТРАНИ (НЯКОЛКО САНТИМЕТРА) */
+        /* МАКСИМАЛНО РАЗДАЛЕЧАВАНЕ ВСТРАНИ */
         #installBtn {
             position: absolute;
-            bottom: 60px; 
-            right: -35px; /* ИЗМЕСТЕН ПОВЕЧЕ НАДЯСНО */
+            right: -80px; /* Много по-надясно */
+            bottom: 60px;
             background: #0B3D91;
             color: white;
-            padding: 10px 22px;
-            border-radius: 15px;
+            padding: 12px 24px;
+            border-radius: 18px;
             font-family: 'Comfortaa', cursive;
             font-weight: bold;
-            font-size: 13px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            font-size: 14px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
             border: 2px solid rgba(255,255,255,0.3);
             cursor: pointer;
             z-index: 10;
@@ -83,13 +87,13 @@
 
         .footer-name {
             position: absolute;
-            bottom: 70px; 
-            left: -30px;  /* ИЗМЕСТЕН ПОВЕЧЕ НАЛЯВО */
+            left: -80px; /* Много по-наляво */
+            bottom: 75px;
             color: white;
             font-family: 'Comfortaa';
-            font-size: 17px;
+            font-size: 18px;
             font-weight: bold;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
             z-index: 10;
             white-space: nowrap;
         }
@@ -99,10 +103,11 @@
             color: white !important;
         }
 
-        /* Защита за малки екрани, за да не излязат извън дисплея */
-        @media (max-width: 480px) {
-            #installBtn { right: -15px; }
-            .footer-name { left: -10px; }
+        /* Корекция за много тесни телефони */
+        @media (max-width: 550px) {
+            #installBtn { right: 5px; bottom: -70px; }
+            .footer-name { left: 5px; bottom: -65px; }
+            .app-container { width: 92%; }
         }
     </style>
 </head>
@@ -178,7 +183,7 @@
                 await state.deferredPrompt.userChoice;
                 state.deferredPrompt = null;
             } else {
-                alert("ИНСТРУКЦИИ:\n\n1. Натиснете 'Споделяне' или менюто.\n2. Изберете 'Добавяне към начален екран'.");
+                alert("ИНСТРУКЦИИ:\n1. Натисни 'Споделяне' или менюто.\n2. Избери 'Add to Home Screen'.");
             }
         };
 
