@@ -45,15 +45,14 @@
             50% { transform: translateY(-20px); }
         }
 
-        /* ГЛАВЕН КОНТЕЙНЕР ЗА ЦЕНТРИРАНЕ */
-        .layout-container {
+        /* КОНТЕЙНЕР ЗА ПОЗИЦИОНИРАНЕ */
+        .wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 1000px; /* Достатъчно широко за елементите отстрани */
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 100%;
-            max-width: 1200px;
-            padding: 0 20px;
-            position: relative;
         }
 
         .glass-card {
@@ -64,14 +63,13 @@
             border-radius: 3rem;
             padding-bottom: 20px;
             width: 380px;
-            position: relative;
             z-index: 5;
         }
 
-        /* ПОЗИЦИОНИРАНЕ ВЛЯВО ОТ КАРТАТА */
+        /* ИМЕТО - ФИКСИРАНО ВЛЯВО ОТ КАРТАТА */
         .footer-name {
             position: absolute;
-            left: -150px; /* Изместено вляво от бялото поле */
+            left: 20px; /* Плътно вляво на екрана/контейнера */
             color: white;
             font-family: 'Comfortaa';
             font-size: 18px;
@@ -80,10 +78,10 @@
             white-space: nowrap;
         }
 
-        /* ПОЗИЦИОНИРАНЕ ВДЯСНО ОТ КАРТАТА */
+        /* БУТОНЪТ - ФИКСИРАН ВДЯСНО ОТ КАРТАТА */
         #installBtn {
             position: absolute;
-            right: -150px; /* Изместено вдясно от бялото поле */
+            right: 20px; /* Плътно вдясно на екрана/контейнера */
             background: #0B3D91;
             color: white;
             padding: 12px 24px;
@@ -94,6 +92,7 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
             border: 2px solid rgba(255,255,255,0.3);
             cursor: pointer;
+            z-index: 10;
             white-space: nowrap;
         }
 
@@ -102,7 +101,7 @@
             color: white !important;
         }
 
-        /* Адаптивност за мобилни устройства */
+        /* Корекция за малки мобилни екрани - да не изчезват */
         @media (max-width: 768px) {
             .footer-name { left: 10px; bottom: -60px; }
             #installBtn { right: 10px; bottom: -65px; }
@@ -114,7 +113,7 @@
 
     <div id="bg-grid"></div>
 
-    <div class="layout-container">
+    <div class="wrapper">
         <div class="footer-name">© Никол Пункова</div>
 
         <div class="glass-card">
@@ -183,7 +182,7 @@
                 await state.deferredPrompt.userChoice;
                 state.deferredPrompt = null;
             } else {
-                alert("ИНСТРУКЦИИ:\n1. Натисни 'Споделяне' или менюто.\n2. Избери 'Добавяне към начален екран'.");
+                alert("ИНСТРУКЦИИ:\n1. Натисни 'Споделяне'.\n2. Избери 'Add to Home Screen'.");
             }
         };
 
