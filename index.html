@@ -7,113 +7,94 @@
 
     <meta name="theme-color" content="#4A00E0">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/144/money-bag.png">
     <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/144/money-bag.png">
-
     <link rel="manifest" href='data:application/json,{"name":"DualPay Calculator","short_name":"DualPay","start_url":".","display":"standalone","background_color":"#4A00E0","theme_color":"#4A00E0","icons":[{"src":"https://img.icons8.com/fluency/144/money-bag.png","sizes":"144x144","type":"image/png"}]}'>
 
     <style>
         :root {
             --primary: #4A00E0;
             --secondary: #8E2DE2;
-            --white: #ffffff;
             --bg: #f0f2f5;
+            --card: #ffffff;
+            --text: #333;
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            color: #333;
+            color: var(--text);
         }
 
         .container {
-            background: var(--white);
-            padding: 30px;
-            border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             width: 90%;
-            max-width: 380px;
+            max-width: 400px;
+            text-align: center;
         }
 
-        h2 { 
-            text-align: center; 
-            color: var(--primary); 
-            margin: 0 0 20px 0;
-            font-size: 24px;
+        h2 { color: var(--primary); margin-bottom: 1.5rem; }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
         }
 
-        .input-group { margin-bottom: 15px; }
-        
-        label { 
-            display: block; 
-            margin-bottom: 6px; 
-            font-weight: 600; 
-            font-size: 14px; 
-            color: #555;
-        }
-        
+        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
+
         input {
             width: 100%;
-            padding: 14px;
-            border: 2px solid #eee;
-            border-radius: 12px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
             box-sizing: border-box;
-            font-size: 16px;
-            outline: none;
+            font-size: 1rem;
             transition: border-color 0.3s;
         }
 
-        input:focus { border-color: var(--primary); }
+        input:focus { border-color: var(--primary); outline: none; }
 
         button {
             width: 100%;
-            padding: 16px;
+            padding: 15px;
             background: var(--primary);
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 18px;
+            border-radius: 10px;
+            font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
             margin-top: 10px;
-            box-shadow: 0 4px 15px rgba(74, 0, 224, 0.3);
-            transition: transform 0.2s;
+            transition: transform 0.2s, background 0.3s;
         }
 
-        button:active { transform: scale(0.97); }
+        button:active { transform: scale(0.98); }
 
         .result-box {
-            margin-top: 25px;
-            padding: 18px;
-            background: #fdfdfd;
-            border-radius: 15px;
-            border: 1px solid #eee;
-            border-left: 6px solid #27ae60;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary);
             display: none;
-            animation: fadeIn 0.4s ease-out;
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .total-title { font-size: 14px; color: #777; text-align: center; margin-bottom: 5px; }
-        .total-value { font-size: 28px; color: #27ae60; font-weight: 800; text-align: center; }
-        
-        .divider { height: 1px; background: #eee; margin: 15px 0; }
-        
-        .info-row { 
-            display: flex; 
-            justify-content: space-between; 
-            font-size: 14px; 
-            margin-bottom: 8px;
-            color: #444;
+        .total-amount {
+            font-size: 1.5rem;
+            color: #27ae60;
+            font-weight: bold;
         }
-        .info-row b { color: #000; }
+
+        .details { font-size: 0.85rem; color: #666; margin-top: 10px; text-align: left; line-height: 1.5; }
+        hr { border: 0; border-top: 1px solid #eee; margin: 10px 0; }
     </style>
 </head>
 <body>
@@ -122,8 +103,8 @@
     <h2>DualPay Calc</h2>
     
     <div class="input-group">
-        <label>Ставка на час (Нето/Чисто)</label>
-        <input type="number" id="rate" placeholder="напр. 12.50" step="0.01">
+        <label>Ставка на час (Чисто)</label>
+        <input type="number" id="rate" placeholder="напр. 10.50" step="0.1">
     </div>
 
     <div class="input-group">
@@ -141,55 +122,48 @@
         <input type="number" id="holidayHours" value="0">
     </div>
 
-    <button onclick="calculate()">ПРЕСМЕТНИ</button>
+    <button onclick="calculate()">ИЗЧИСЛИ</button>
 
     <div id="result" class="result-box">
-        <div class="total-title">ОБЩО ЗА ПОЛУЧАВАНЕ:</div>
-        <div class="total-value" id="totalValue">0.00 лв.</div>
-        
-        <div class="divider"></div>
-        
-        <div class="info-row"><span>Брутна заплата (прибл.):</span> <b id="brutoValue">0.00 лв.</b></div>
-        <div class="divider"></div>
-        
-        <div class="info-row"><span>Дневни:</span> <span id="resDay">0.00 лв.</span></div>
-        <div class="info-row"><span>Нощни бонус:</span> <span id="resNight">0.00 лв.</span></div>
-        <div class="info-row"><span>Празнични:</span> <span id="resHol">0.00 лв.</span></div>
+        <div>За плащане (Нето):</div>
+        <div class="total-amount" id="totalValue">0.00 лв.</div>
+        <div class="details" id="detailBreakdown"></div>
     </div>
 </div>
 
 <script>
-    // Регистрация на скрипт за инсталиране
+    // Регистрация на Service Worker за PWA инсталиране
     if ('serviceWorker' in navigator) {
-        const swCode = 'data:application/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdmZXRjaCcsIGU9Pnt9KTs=';
-        navigator.serviceWorker.register(swCode);
+        const sw = 'data:application/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdmZXRjaCcsIGU9Pnt9KTs=';
+        navigator.serviceWorker.register(sw);
     }
 
     function calculate() {
         const rate = parseFloat(document.getElementById('rate').value) || 0;
-        const dH = parseFloat(document.getElementById('dayHours').value) || 0;
-        const nH = parseFloat(document.getElementById('nightHours').value) || 0;
-        const hH = parseFloat(document.getElementById('holidayHours').value) || 0;
+        const dayH = parseFloat(document.getElementById('dayHours').value) || 0;
+        const nightH = parseFloat(document.getElementById('nightHours').value) || 0;
+        const holidayH = parseFloat(document.getElementById('holidayHours').value) || 0;
 
         if (rate <= 0) {
-            alert("Моля, въведи часова ставка!");
+            alert("Моля, въведи ставка!");
             return;
         }
 
-        const calcDay = dH * rate;
-        const calcNight = nH * rate * 1.183;
-        const calcHol = hH * rate * 2.0;
-        const netTotal = calcDay + calcNight + calcHol;
+        const dayTotal = dayH * rate;
+        const nightTotal = nightH * rate * 1.183;
+        const holidayTotal = holidayH * rate * 2.0;
+        const totalNet = dayTotal + nightTotal + holidayTotal;
         
-        // Изчисляване на Бруто (Нето / 0.776)
-        const brutoTotal = netTotal / 0.776;
+        // Бруто изчисление
+        const totalBruto = totalNet / 0.776;
 
-        // Показване на резултатите
-        document.getElementById('totalValue').innerText = netTotal.toFixed(2) + " лв.";
-        document.getElementById('brutoValue').innerText = brutoTotal.toFixed(2) + " лв.";
-        document.getElementById('resDay').innerText = calcDay.toFixed(2) + " лв.";
-        document.getElementById('resNight').innerText = calcNight.toFixed(2) + " лв.";
-        document.getElementById('resHol').innerText = calcHol.toFixed(2) + " лв.";
+        document.getElementById('totalValue').innerText = totalNet.toFixed(2) + " лв.";
+        document.getElementById('detailBreakdown').innerHTML = 
+            `<b>Мръсна заплата (Бруто):</b> ~${totalBruto.toFixed(2)} лв.<br>` +
+            `<hr>` +
+            `Дневни: ${dayTotal.toFixed(2)} лв.<br>` +
+            `Нощни бонус: ${nightTotal.toFixed(2)} лв.<br>` +
+            `Празнични: ${holidayTotal.toFixed(2)} лв.`;
         
         document.getElementById('result').style.display = 'block';
     }
