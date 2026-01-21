@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DualPay Calculator</title>
     
+    <meta name="theme-color" content="#4A00E0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/144/money-bag.png">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/144/money-bag.png">
+
+    <link rel="manifest" href='data:application/json,{"name":"DualPay Calculator","short_name":"DualPay","start_url":".","display":"standalone","background_color":"#4A00E0","theme_color":"#4A00E0","icons":[{"src":"https://img.icons8.com/fluency/144/money-bag.png","sizes":"144x144","type":"image/png"}]}'>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
@@ -29,7 +37,6 @@
             position: relative;
         }
 
-        /* ПЛУВАЩИТЕ ИКОНКИ ОТ НАЧАЛОТО */
         #bg-grid {
             position: absolute; inset: 0; z-index: 0;
             display: grid; grid-template-columns: repeat(6, 1fr);
@@ -165,6 +172,16 @@
     </div>
 
     <script>
+        // SERVICE WORKER РЕГИСТРАЦИЯ (За инсталиране)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                const swCode = 'self.addEventListener("fetch", (e) => {});';
+                const blob = new Blob([swCode], {type: 'text/javascript'});
+                const url = URL.createObjectURL(blob);
+                navigator.serviceWorker.register(url);
+            });
+        }
+
         const RATE = 1.95583;
         let state = { inCurr: 'BGN', outCurr: 'BGN', deferredPrompt: null };
 
@@ -201,7 +218,6 @@
         document.getElementById('resEUR').onclick = function() { state.outCurr = 'EUR'; this.classList.add('toggle-btn-active'); document.getElementById('resBGN').classList.remove('toggle-btn-active'); calculate(); };
         [ui.sum, ui.bgn, ui.eur].forEach(el => el.oninput = calculate);
 
-        // ГЕНЕРИРАНЕ НА ИКОНКИТЕ НА ФОНА
         window.onload = () => {
             const grid = document.getElementById('bg-grid');
             for (let i = 0; i < 12; i++) {
@@ -212,15 +228,27 @@
             }
         };
 
+        // ЛОГИКА ЗА ИНСТАЛИРАНЕ
         const installBtn = document.getElementById('installBtn');
         const modal = document.getElementById('installModal');
         const instr = document.getElementById('installInstructions');
-        window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); state.deferredPrompt = e; });
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            state.deferredPrompt = e;
+            // Ако браузърът поддържа автоматичното меню, можеш да покажеш бутона по-ярко
+        });
+
         installBtn.onclick = async () => {
-            if (state.deferredPrompt) { state.deferredPrompt.prompt(); state.deferredPrompt = null; } 
-            else {
+            if (state.deferredPrompt) {
+                state.deferredPrompt.prompt();
+                const { outcome } = await state.deferredPrompt.userChoice;
+                state.deferredPrompt = null;
+            } else {
                 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-                instr.innerHTML = isIOS ? "1. Натисни <b>'Споделяне'</b>.<br>2. Избери <b>'Добавяне към началния екран'</b>." : "1. Натисни <b>трите точки</b>.<br>2. Избери <b>'Инсталиране'</b>.";
+                instr.innerHTML = isIOS ? 
+                    "1. Натисни бутона <b>'Споделяне'</b> (долу в центъра).<br><br>2. Превърти и избери <b>'Add to Home Screen'</b> (Добавяне към началния екран)." : 
+                    "Приложението вече е инсталирано или трябва да натиснеш <b>трите точки</b> горе вдясно и да избереш <b>'Инсталиране'</b>.";
                 modal.style.display = 'flex';
             }
         };
